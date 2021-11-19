@@ -7,7 +7,7 @@ class loginController {
   login = (req, res) => {
     this.loginService.authenticate(req.body)
       .then(user => user ? res.json(user) : res.status(403).json({ message: 'Usuario ou senha invalidos'}))
-      .catch(console.log)
+      .catch()
   }
 }
 
