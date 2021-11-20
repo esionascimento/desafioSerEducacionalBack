@@ -9,13 +9,14 @@ const authenticate = async ({ email, password }) => {
   if (!result) {
     return null;
   }
-  const { name } = result;
+  const { _id, name } = result;
   const { password: hash } = result;
   if (bcrypt.compareSync(password, hash)) {
-    const token = await jwt.sign({ name, email }, process.env.SECRET, {
-      expiresIn: 40
+    const token = await jwt.sign({ _id, name, email }, process.env.SECRET, {
+      expiresIn: 3000
     })
     return {
+      _id,
       name,
       email,
       token
