@@ -8,7 +8,7 @@ const middleError = require('./src/api/middlewares/error');
 
 const app = express();
 const corsOptions ={
-  origin:'http://localhost:3000', 
+  origin:'https://xenodochial-curran-af6492.netlify.app', 
   credentials:true, //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
