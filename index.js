@@ -8,7 +8,7 @@ const middleError = require('./src/api/middlewares/error');
 
 const app = express();
 const corsOptions ={
-  origin:'https://xenodochial-curran-af6492.netlify.app', 
+  origin:'https://desafio-ser-educacional-front.vercel.app', 
   credentials:true, //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
