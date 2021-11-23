@@ -1,10 +1,11 @@
 const connect = require('./connection');
 const {ObjectId} = require('mongodb');
 
-const getAllById = async () => {
+const getAllById = async (_id) => {
   const connection = await connect();
-  const result = await connection.collection('contatos').find().toArray();
-  console.log('result :', result);
+  const o_id = new ObjectId(_id);
+  console.log('aqui');
+  const result = await connection.collection('contatos').find({_id:o_id}).toArray();
   return result;
 };
 
