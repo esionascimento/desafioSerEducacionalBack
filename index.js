@@ -8,7 +8,7 @@ const middleError = require('./src/api/middlewares/error');
 
 const app = express();
 const corsOptions ={
-  origin:'https://desafio-ser-educacional-front.vercel.app', 
+  origin: process.env.ORIGIN_CORS,
   credentials:true, //access-control-allow-credentials:true
   optionSuccessStatus:200
 }
@@ -18,7 +18,6 @@ const port = process.env.PORT || 4000;
 
 app.use(bodyParser.json());
 
-/* app.use(cors()); */
 app.use(routers);
 app.use(middleError);
 app.get('/', (_req, res) => {
