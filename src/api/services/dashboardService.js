@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const { createContato, getAllById } = require('../models/dashboardModel');
+const { createContato, getAllById, deleteContatoService } = require('../models/dashboardModel');
 
 require('dotenv').config();
 
@@ -29,4 +28,4 @@ const authenticate = async ({ email, password }) => {
   }
 };
 
-module.exports = { createContatoService, getAllById };
+module.exports = { createContatoService, getAllById, deleteContatoService };

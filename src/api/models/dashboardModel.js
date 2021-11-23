@@ -31,4 +31,19 @@ const createContato = async (_id, nome, sobrenome, telefone, dataNascimento, end
   return result;
 }
 
-module.exports = { createContato, getAllById };
+const deleteContatoService = async (_id, body) => {
+  const { nome } = body;
+  const connection = await connect();
+  const o_id = new ObjectId(_id);
+
+  const result = await connection.collection('contatos')
+  .updateOne(
+    {_id:o_id},
+    { $pull: { data: { nome: nome } } },
+    );
+    console.log('result :', result);
+    
+  return result;
+}
+
+module.exports = { createContato, getAllById, deleteContatoService };
