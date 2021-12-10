@@ -8,29 +8,43 @@ const getAllById = async (_id) => {
   return result;
 };
 
-const editContato = async (_id, nome, sobrenome, telefone, dataNascimento, endereco, email) => {
+const getByName = async (idAgenda, name) => {
+console.log('name :', name);
   const connection = await connect();
-  const o_id = new ObjectId(_id);
+  const result = await connection.collection('contatos')
+  .find({_id:ObjectId(idAgenda), data: { $elemMatch: { name: { $eq: name } } }}).toArray();
+  return result;
+}
+
+const editContato = async (idAgenda, contato, name, sobrenome, telefone, dataNascimento, endereco, email) => {
+  const connection = await connect();
+  const o_id = new ObjectId(idAgenda);
   const result1 = await connection.collection('contatos').findOne({_id:o_id});
-
+  
   if (!result1) {
-    await connection.collection('contatos').insertOne({_id: ObjectId(_id)});
+    await connection.collection('contatos').insertOne({_id: ObjectId(idAgenda)});
   }
-
+  
   const result = await connection.collection('contatos')
   .updateOne(
-    {_id: o_id},
-    {$set:
-      {"data":
-      {nome, sobrenome, telefone, dataNascimento, endereco, email }
+    {
+      _id: ObjectId(idAgenda),
+      data: { $elemMatch: { name: contato } }
+    },
+    { $set: {
+      "data.$.name": name,
+      "data.$.sobrenome": sobrenome,
+      "data.$.telefone": telefone,
+      "data.$.dataNascimento": dataNascimento,
+      "data.$.endereco": endereco,
+      "data.$.email": email
+      }
     }
-  },
   );
-  console.log('result :', result);
   return result;
 };
 
-const createContato = async (_id, nome, sobrenome, telefone, dataNascimento, endereco, email) => {
+const createContato = async (_id, name, sobrenome, telefone, dataNascimento, endereco, email) => {
   const connection = await connect();
   const o_id = new ObjectId(_id);
   const result1 = await connection.collection('contatos').findOne({_id:o_id});
@@ -44,25 +58,24 @@ const createContato = async (_id, nome, sobrenome, telefone, dataNascimento, end
     {_id: ObjectId(_id)},
     {$push:
       {"data":
-        {nome, sobrenome, telefone, dataNascimento, endereco, email }
+        {name, sobrenome, telefone, dataNascimento, endereco, email }
       }
     },
   );
-  
   return result;
 };
 
 const deleteContatoService = async (_id, body) => {
-  const { nome } = body;
+  const { name } = body;
   const connection = await connect();
   const o_id = new ObjectId(_id);
 
   const result = await connection.collection('contatos')
   .updateOne(
     {_id:o_id},
-    { $pull: { data: { nome: nome } } },
+    { $pull: { data: { name: name } } },
   );    
   return result;
 };
 
-module.exports = { createContato, getAllById, deleteContatoService, editContato };
+module.exports = { createContato, getAllById, deleteContatoService, editContato, getByName };
