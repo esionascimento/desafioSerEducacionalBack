@@ -1,4 +1,4 @@
-const { createContato, getAllById, deleteContatoService } = require('../models/dashboardModel');
+const { createContato, getAllById, deleteContatoService, editContato } = require('../models/dashboardModel');
 
 require('dotenv').config();
 
@@ -8,7 +8,14 @@ const createContatoService = async (_id, body) => {
   return result;
 }
 
-const authenticate = async ({ email, password }) => {
+const editContatoService = async (_id, body) => {
+  editContato
+  const {nome, sobrenome, telefone, dataNascimento, endereco, email} = body;
+  const result = await editContato(_id, nome, sobrenome, telefone, dataNascimento, endereco, email)
+  return result;
+}
+
+/* const authenticate = async ({ email, password }) => {
   const result = await login(email);
   if (!result) {
     return null;
@@ -26,6 +33,6 @@ const authenticate = async ({ email, password }) => {
       token
     };
   }
-};
+}; */
 
-module.exports = { createContatoService, getAllById, deleteContatoService };
+module.exports = { createContatoService, getAllById, deleteContatoService, editContatoService };
