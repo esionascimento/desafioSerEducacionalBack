@@ -1,21 +1,18 @@
 const express = require('express');
+const rescue = require('express-rescue');
 const { validateToken } = require('../middlewares/validateToken');
 require('dotenv');
-const { createContatoService, getAllById, deleteContatoService } = require('../services/dashboardService');
+const { createContatoService, getAllById, deleteContatoService, editContatoService } = require('../services/dashboardService');
+const { validateTokent } = require('../middlewares/validate');
 
 const routerUser = express.Router();
 
-routerUser.get('/', async (req, res) =>{
-  try {
-    const { authorization } = req.headers;
-    const payload = validateToken(authorization);
-    const { _id } = payload;
-    const result = await getAllById(_id);
-    return res.status(200).json(result);
-  } catch (e) {
-    return res.status(401).json('erro ao buscar contatos');
-  }
-});
+routerUser.patch('/edit', validateTokent, rescue(async (req, res, next) => {
+  const { _id } = req.userId;
+  const result = await editContatoService(_id, req.body);
+  console.log('result-controller :', result);
+  return res.status(200).json("Contato atualizado com sucesso.");
+}));
 
 routerUser.post('/create', async (req, res, next) =>{
   try {
@@ -25,23 +22,35 @@ routerUser.post('/create', async (req, res, next) =>{
     const result = await createContatoService(_id, req.body);
     return res.status(200).json({ _id: result });
   } catch (e) {
-    return res.status(401).json('erro ao criar contato');
-    next(e);
+    return next({status: 400, message: "Erro ao criar contato!"});
   }
 });
 
-routerUser.patch('/delete', async (req, res, next) =>{
-  if (!req.body) next();
+routerUser.delete('/delete', async (req, res, next) =>{
+  console.log("delete");
+  if (!req.body) return next({status: 400, message: "Erro ao deletar contato!"});
   try {
     const { authorization } = req.headers;
-    console.log('nominho: ', req.body);
     const payload = validateToken(authorization);
     const { _id } = payload;
     await deleteContatoService(_id, req.body);
     return res.status(200).json({ delete: true });
   } catch (e) {
-    return res.status(401).json({ delete: false });
-    next(e);
+    return next({status: 400, message: "Erro ao deletar contato!"});
+  }
+});
+
+
+routerUser.get('/', async (req, res, next) =>{
+  console.log("home");
+  try {
+    const { authorization } = req.headers;
+    const payload = validateToken(authorization);
+    const { _id } = payload;
+    const result = await getAllById(_id);
+    return res.status(200).json(result);
+  } catch (e) {
+    return next({status: 400, message: "Erro ao buscar contatos"});
   }
 });
 
