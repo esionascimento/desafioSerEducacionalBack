@@ -1,7 +1,6 @@
 const middleError = (err, _req, res, _next) => {
-
   if(err.isError) {
-    return res.status(422).json({message: err.message})
+    return res.status(err.code).json({message: err.message})
   }
 }
 
