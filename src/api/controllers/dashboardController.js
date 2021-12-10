@@ -7,10 +7,12 @@ const { validateTokent } = require('../middlewares/validate');
 
 const routerUser = express.Router();
 
-routerUser.patch('/edit', validateTokent, rescue(async (req, res, next) => {
-  const { _id } = req.userId;
-  const result = await editContatoService(_id, req.body);
-  console.log('result-controller :', result);
+routerUser.put('/edit', validateTokent, rescue(async (req, res, next) => {
+  const idAgenda = req.userId;
+  const result = await editContatoService(idAgenda, req.body);
+  if (result.isError) {
+    return next(result);
+  }
   return res.status(200).json("Contato atualizado com sucesso.");
 }));
 
@@ -27,7 +29,6 @@ routerUser.post('/create', async (req, res, next) =>{
 });
 
 routerUser.delete('/delete', async (req, res, next) =>{
-  console.log("delete");
   if (!req.body) return next({status: 400, message: "Erro ao deletar contato!"});
   try {
     const { authorization } = req.headers;
@@ -42,7 +43,6 @@ routerUser.delete('/delete', async (req, res, next) =>{
 
 
 routerUser.get('/', async (req, res, next) =>{
-  console.log("home");
   try {
     const { authorization } = req.headers;
     const payload = validateToken(authorization);
