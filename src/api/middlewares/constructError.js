@@ -1,4 +1,4 @@
-import { StatusCodes } from 'http-status-codes';
+const { StatusCodes } = require('http-status-codes');
 
 const error = (code, message) => ({
   isError: true,
@@ -9,5 +9,6 @@ const error = (code, message) => ({
 module.exports = {
   errorToken: (message) => error(StatusCodes.BAD_REQUEST, message),
   errorSalesId: (message) => error(StatusCodes.BAD_REQUEST, message),
-  errorLogin: (message) => error(StatusCodes.BAD_REQUEST, message)
+  errorLogin: (message) => error(StatusCodes.BAD_REQUEST, message),
+  errorContatoExist: (message) => error(StatusCodes.BAD_REQUEST, message)
 };
