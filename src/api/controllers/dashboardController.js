@@ -28,7 +28,7 @@ routerUser.post('/create', async (req, res, next) =>{
   }
 });
 
-routerUser.delete('/delete', async (req, res, next) =>{
+routerUser.patch('/delete', async (req, res, next) =>{
   if (!req.body) return next({status: 400, message: "Erro ao deletar contato!"});
   try {
     const { authorization } = req.headers;
@@ -41,17 +41,13 @@ routerUser.delete('/delete', async (req, res, next) =>{
   }
 });
 
-
-routerUser.get('/', async (req, res, next) =>{
-  try {
-    const { authorization } = req.headers;
-    const payload = validateToken(authorization);
-    const { _id } = payload;
-    const result = await getAllById(_id);
-    return res.status(200).json(result);
-  } catch (e) {
-    return next({status: 400, message: "Erro ao buscar contatos"});
-  }
-});
+routerUser.get('/', validateTokent, rescue(async (req, res, next) => {
+  const idAgenda = req.userId;
+  const result = await getAllById(idAgenda);
+  if (result.isError) {
+    return next(result);
+  };
+  return res.status(200).json(result);
+}));
 
 module.exports = routerUser;
