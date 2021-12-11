@@ -73,7 +73,7 @@ const deleteContatoService = async (_id, body) => {
   const result = await connection.collection('contatos')
   .updateOne(
     {_id:o_id},
-    { $pull: { data: { name: name } } },
+    { $pull: { data: { name } } },
   );    
   return result;
 };
