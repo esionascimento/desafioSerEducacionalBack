@@ -6,7 +6,7 @@ const createContatoService = async (_id, body) => {
   const {name, sobrenome, telefone, dataNascimento, endereco, email} = body;
   const notExistContact = await getByName(_id, name);
   if (notExistContact.length > 0) {
-    return errorContatoExist("Contact not exist");
+    return errorContatoExist("Contato já existe");
   } else {
     const result = await createContato(_id, name, sobrenome, telefone, dataNascimento, endereco, email)
     return result;
