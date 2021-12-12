@@ -22,6 +22,9 @@ routerUser.post('/create', async (req, res, next) =>{
     const payload = validateToken(authorization);
     const { _id } = payload;
     const result = await createContatoService(_id, req.body);
+    if (result.isError) {
+      return next(result);
+    }
     return res.status(200).json({ _id: result });
   } catch (e) {
     return next({status: 400, message: "Erro ao criar contato!"});

@@ -4,8 +4,13 @@ require('dotenv').config();
 
 const createContatoService = async (_id, body) => {
   const {name, sobrenome, telefone, dataNascimento, endereco, email} = body;
-  const result = await createContato(_id, name, sobrenome, telefone, dataNascimento, endereco, email)
-  return result;
+  const notExistContact = await getByName(_id, name);
+  if (notExistContact.length > 0) {
+    return errorContatoExist("Contact not exist");
+  } else {
+    const result = await createContato(_id, name, sobrenome, telefone, dataNascimento, endereco, email)
+    return result;
+  }
 }
 
 const editContatoService = async (idAgenda, body) => {
